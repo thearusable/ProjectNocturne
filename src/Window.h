@@ -1,0 +1,10 @@
+
+
+namespace noc
+{
+
+	class Window
+	{
+
+	};
+}

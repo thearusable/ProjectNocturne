@@ -33,7 +33,6 @@ Create and destroy a Vulkan surface on an SDL window.
 
 // Tell SDL not to mess with main()
 #define SDL_MAIN_HANDLED
-
 #include <glm/glm.hpp>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
@@ -112,6 +111,18 @@ int main()
     vk::SurfaceKHR surface(c_surface);
 
     // This is where most initializtion for a program should be performed
+
+	uint32_t devices_count;
+    VkPhysicalDevice devices;
+
+	VkResult result = vkEnumeratePhysicalDevices(instance, &devices_count, NULL);
+    if (result != VkResult::VK_SUCCESS)
+	{
+          std::cout << "Could not list physical devices." << std::endl;
+          return 1;
+	}
+
+	
 
     // Poll for user input.
     bool stillRunning = true;
