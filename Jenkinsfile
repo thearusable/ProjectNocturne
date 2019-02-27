@@ -8,7 +8,7 @@ pipeline {
     }
 
     stages {
-        stage ('git'){
+        stage ('checkout'){
             steps {
                 checkout([
                     $class: 'GitSCM',
@@ -40,32 +40,6 @@ pipeline {
                 sh 'ETL_THREADS=-j6 ETL_GPP=g++-4.9.4 LD_LIBRARY_PATH=\"${LD_LIBRARY_PATH}:/opt/intel/mkl/lib/intel64:/opt/intel/lib/intel64\" ./scripts/test_runner.sh'
                 archive 'catch_report.xml'
                 junit 'catch_report.xml'
-            }
-        }
-
-        stage ('sonar-master'){
-            when {
-                branch 'master'
-            }
-            steps {
-                sh "/opt/sonar-runner/bin/sonar-runner"
-            }
-        }
-
-        stage ('sonar-branch'){
-            when {
-                not {
-                    branch 'master'
-                }
-            }
-            steps {
-                sh "/opt/sonar-runner/bin/sonar-runner -Dsonar.branch=${env.BRANCH_NAME}"
-            }
-        }
-
-        stage ('bench'){
-            steps {
-                build job: 'etl - benchmark', wait: false
             }
         }
     }
