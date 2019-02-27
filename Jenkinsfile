@@ -4,15 +4,15 @@ pipeline {
     agent any
     
     stages{
-        steps ('checkout'){
+        stage ('checkout'){
             checkout scm
         }
     
-        steps ('build'){
+        stage ('build'){
             //build
         }
     
-        steps ('test'){
+        stage ('test'){
             //test
         }
     }
