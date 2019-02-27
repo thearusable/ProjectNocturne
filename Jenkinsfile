@@ -1,7 +1,9 @@
 #!groovy
 
 stage 'checkout'
-//checkout
+node{
+    checkout git
+}
 stage 'build'
 //build
 stage 'test'
