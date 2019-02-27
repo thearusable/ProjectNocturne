@@ -1,13 +1,18 @@
 #!groovy
 
-node{
-    stage ('checkout'){
-        checkout scm
+pipeline {
+    agent any
+    
+    stages{
+        stage ('checkout'){
+            checkout scm
+        }
+    
+        stage 'build'
+        //build
+    
+        stage 'test'
+        //test
+    
     }
-    
-    stage 'build'
-    //build
-    
-    stage 'test'
-    //test
 }
