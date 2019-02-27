@@ -2,12 +2,12 @@
 
 node{
     stage ('checkout'){
-        steps {
-            checkout scm
-        }
+        checkout scm
     }
+    
     stage 'build'
     //build
+    
     stage 'test'
     //test
 }
