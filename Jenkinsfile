@@ -1,8 +1,8 @@
 #!groovy
 
 stage 'checkout'
-node{
-    checkout git
+steps {
+    checkout scm
 }
 stage 'build'
 //build
