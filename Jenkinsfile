@@ -69,13 +69,4 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            step([$class: 'Mailer',
-                notifyEveryUnstableBuild: true,
-                recipients: "baptiste.wicht@gmail.com",
-                sendToIndividuals: true])
-        }
-    }
 }
