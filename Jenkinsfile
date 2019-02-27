@@ -23,8 +23,6 @@ pipeline {
         stage ('pre-analysis') {
             steps {
                 sh 'cppcheck --xml-version=2 -j3 --enable=all --std=c++11 `git ls-files "*.hpp" "*.cpp"` 2> cppcheck_report.xml'
-                sh 'sloccount --duplicates --wide --details include/etl test workbench > sloccount.sc'
-                sh 'cccc include/etl/*.hpp test/*.cpp workbench/*.cpp || true'
             }
         }
 
@@ -35,7 +33,7 @@ pipeline {
             }
         }
 
-        stage ('test'){
+        stage ('unit-tests'){
             steps {
                 sh 'ETL_THREADS=-j6 ETL_GPP=g++-4.9.4 LD_LIBRARY_PATH=\"${LD_LIBRARY_PATH}:/opt/intel/mkl/lib/intel64:/opt/intel/lib/intel64\" ./scripts/test_runner.sh'
                 archive 'catch_report.xml'
