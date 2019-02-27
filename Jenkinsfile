@@ -14,6 +14,6 @@ pipeline {
     
         steps ('test'){
             //test
-        {
+        }
     }
 }
