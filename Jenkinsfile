@@ -1,8 +1,9 @@
 #!groovy
 
-stage 'checkout'
-steps {
-    checkout scm
+stage 'checkout'{
+    steps {
+        checkout scm
+    }
 }
 stage 'build'
 //build
