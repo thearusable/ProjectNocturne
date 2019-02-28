@@ -1,13 +1,6 @@
 cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
-cmake_policy(VERSION 3.7)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 project(Nocturne)
-
-OPTION(USE_D2D_WSI "Build the project using Direct to Display swapchain" OFF)
-OPTION(USE_WAYLAND_WSI "Build the project using Wayland swapchain" OFF)
-
-set(RESOURCE_INSTALL_DIR "" CACHE PATH "Path to install resources to (leave empty for running uninstalled)")
 
 set(CMAKE_DEBUG_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Debug/)
 set(CMAKE_RELEASE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Release/)
@@ -38,146 +31,45 @@ function(FIND_AND_DOWNLOAD_RESOURCE ResourceName ResourceURL)
    endif()
 endfunction()
 
+# Function to copy dll files to build directory
+function(COPY_LIBS_TO_BUILD_DIR BuildDirectory)
+   find_path(OUTPUT_EXISTS ${BuildDirectory} ${CMAKE_BINARY_DIR})
+   if(NOT ${OUTPUT_EXISTS})
+      execute_process(COMMAND mkdir -p ${BuildDirectory})
+      execute_process(COMMAND cp ${RESOURCES_PATH}/GLEW/glew-2.1.0/bin/Release/x64/glew32.dll ${BuildDirectory})
+      execute_process(COMMAND cp ${RESOURCES_PATH}/SDL2.dll ${BuildDirectory})
+   endif()
+endfunction()
 
-FIND_AND_DOWNLOAD_RESOURCE(GLM https://github.com/g-truc/glm/releases/download/0.9.9.3/glm-0.9.9.3.zip)
-FIND_AND_DOWNLOAD_GIT_RESOURCE(VULCAN_H https://github.com/KhronosGroup/Vulkan-Headers.git)
-FIND_AND_DOWNLOAD_GIT_RESOURCE(VULCAN_HPP https://github.com/KhronosGroup/Vulkan-Hpp.git)
+FIND_AND_DOWNLOAD_RESOURCE(GLEW https://sourceforge.net/projects/glew/files/glew/2.1.0/glew-2.1.0-win32.zip)
+FIND_AND_DOWNLOAD_RESOURCE(SDL_SOURCE https://www.libsdl.org/release/SDL2-2.0.9.zip)
+FIND_AND_DOWNLOAD_RESOURCE(SDL_LIB https://www.libsdl.org/release/SDL2-2.0.9-win32-x64.zip)
 
+set(RESOURCERS_INCLUDES ${RESOURCES_PATH}/glew-2.1.0/include/GL
+						${RESOURCES_PATH}/SDL2-2.0.9//include)
 
-set(RESOURCERS_INCLUDES ${RESOURCES_PATH}/GLM
-						${RESOURCES_PATH}/VULCAN_H/include
-						${RESOURCES_PATH}/VULCAN_HPP)
+set(RESOURCES_LIBS ${RESOURCES_PATH}/glew-2.1.0/lib/Release/x64
+				   ${RESOURCES_PATH}/glew-2.1.0/lib/Release/x64)
 
+COPY_LIBS_TO_BUILD_DIR(${CMAKE_DEBUG_RUNTIME_OUTPUT_DIRECTORY})
+COPY_LIBS_TO_BUILD_DIR(${CMAKE_RELEASE_RUNTIME_OUTPUT_DIRECTORY})
 
-
-
-# Use FindVulkan module added with CMAKE 3.7
-if (NOT CMAKE_VERSION VERSION_LESS 3.7.0)
-	message(STATUS "Using module to find Vulkan")
-	find_package(Vulkan)
-endif()
-
-IF(WIN32)
-	IF (NOT Vulkan_FOUND)
-		find_library(Vulkan_LIBRARY NAMES vulkan-1 vulkan PATHS ${CMAKE_SOURCE_DIR}/libs/vulkan)
-		IF (Vulkan_LIBRARY)
-			set(Vulkan_FOUND ON)
-			MESSAGE("Using bundled Vulkan library version")
-		ENDIF()
-	ENDIF()
-	#find_library(ASSIMP_LIBRARIES NAMES assimp libassimp.dll.a PATHS ${CMAKE_SOURCE_DIR}/libs/assimp)
-	#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVK_USE_PLATFORM_WIN32_KHR")
-ELSE(WIN32)
-	IF (NOT Vulkan_FOUND)
-		find_library(Vulkan_LIBRARY NAMES vulkan HINTS "$ENV{VULKAN_SDK}/lib" "${CMAKE_SOURCE_DIR}/libs/vulkan" REQUIRED)
-		IF (Vulkan_LIBRARY)
-			set(Vulkan_FOUND ON)
-			MESSAGE("Using bundled Vulkan library version")
-		ENDIF()
-	ENDIF()
-	find_package(ASSIMP REQUIRED)
-	find_package(Threads REQUIRED)
-IF(USE_D2D_WSI)
-	MESSAGE("Using direct to display extension...")
-	add_definitions(-D_DIRECT2DISPLAY)
-ELSEIF(USE_WAYLAND_WSI)
-	find_program(PKG_CONFIG pkg-config)
-	if (NOT PKG_CONFIG)
-		message(FATAL_ERROR "pkg-config binary not found")
-	endif ()
-	find_package(Wayland REQUIRED)
-	if (NOT WAYLAND_FOUND)
-		message(FATAL_ERROR "Wayland development package not found")
-	endif ()
-	pkg_check_modules(WAYLAND_PROTOCOLS REQUIRED wayland-protocols)
-	if (NOT WAYLAND_PROTOCOLS_FOUND)
-		message(FATAL_ERROR "Wayland protocols package not found")
-	endif ()
-	find_program(WAYLAND_SCANNER wayland-scanner)
-	if (NOT WAYLAND_SCANNER)
-		message(FATAL_ERROR "wayland-scanner binary not found")
-	endif ()
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVK_USE_PLATFORM_WAYLAND_KHR")
-	include_directories(${WAYLAND_INCLUDE_DIR})
-	execute_process(COMMAND ${PKG_CONFIG} --variable=pkgdatadir wayland-protocols OUTPUT_VARIABLE protocol_dir OUTPUT_STRIP_TRAILING_WHITESPACE)
-	execute_process(COMMAND ${WAYLAND_SCANNER} client-header ${protocol_dir}/stable/xdg-shell/xdg-shell.xml xdg-shell-client-protocol.h
-			COMMAND ${WAYLAND_SCANNER} private-code ${protocol_dir}/stable/xdg-shell/xdg-shell.xml xdg-shell-protocol.c)
-	include_directories(${CMAKE_BINARY_DIR})
-ELSE(USE_D2D_WSI)
-	find_package(XCB REQUIRED)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVK_USE_PLATFORM_XCB_KHR")
-ENDIF(USE_D2D_WSI)
-	# Todo : android?
-ENDIF(WIN32)
-
-IF (NOT Vulkan_FOUND)
-	message(FATAL_ERROR "Could not find Vulkan library!")
-ELSE()
-	message(STATUS ${Vulkan_LIBRARY})
-ENDIF()
-
-# Set preprocessor defines
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOMINMAX -D_USE_MATH_DEFINES")
-
-# Clang specific stuff
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-switch-enum")
-endif()
-
-
-add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-add_definitions(-std=c++11)
-
-file(GLOB HEADERS *.hpp)
-file(GLOB SOURCES *.cpp)
+file(GLOB HEADERS "src/*.hpp")
+file(GLOB SOURCES "src/*.cpp")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${RESOURCERS_INCLUDES})
+link_directories(${RESOURCES_LIBS})
 
-set(SOURCE_FOLDER_NAME src)
-
-# Function for building single example
-#file(GLOB SOURCES *.cpp ${BASE_HEADERS} ${SOURCE_FOLDER_NAME}/*.cpp)
-#SET(MAIN_CPP ${SOURCE_FOLDER_NAME}/${SOURCE_FOLDER_NAME}.cpp)
-#if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FOLDER_NAME}/main.cpp)
-SET(MAIN_CPP ${SOURCE_FOLDER_NAME}/main.cpp)
-#ENDIF()
-# imgui example requires additional source files
-#IF(${SOURCE_FOLDER_NAME} STREQUAL "imgui")
-#	file(GLOB ADD_SOURCE external/imgui/*.cpp)
-#	SET(SOURCES ${SOURCES} ${ADD_SOURCE})
-#ENDIF()
-# Add shaders
-#set(SHADER_DIR data/shaders/${SOURCE_FOLDER_NAME})
-#file(GLOB SHADERS "${SHADER_DIR}/*.vert" "${SHADER_DIR}/*.frag" "${SHADER_DIR}/*.geom" "${SHADER_DIR}/*.tesc" "${SHADER_DIR}/*.tese")
-#source_group("Shaders" FILES ${SHADERS})
-if(WIN32)
-	add_executable(${SOURCE_FOLDER_NAME} WIN32 ${MAIN_CPP} ${HEADERS} ${SOURCES} ${SHADERS})
-	target_link_libraries(${SOURCE_FOLDER_NAME} base ${Vulkan_LIBRARY} ${ASSIMP_LIBRARIES} ${WINLIBS})
-else(WIN32)
-	add_executable(${SOURCE_FOLDER_NAME} ${MAIN_CPP} ${HEADERS} ${SOURCES} ${SHADERS})
-	target_link_libraries(${SOURCE_FOLDER_NAME} base )
-endif(WIN32)
-
-if(RESOURCE_INSTALL_DIR)
-	install(TARGETS ${SOURCE_FOLDER_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
+if(MSVC)
+    add_compile_options("/W4" "$<$<CONFIG:RELEASE>:/O2>")
+else()
+    add_compile_options("-Wall" "-Wextra" "-Werror" "$<$<CONFIG:RELEASE>:-O3>")
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        add_compile_options("-stdlib=libc++")
+    else()
+        # nothing special for gcc at the moment
+    endif()
 endif()
 
-#if(RESOURCE_INSTALL_DIR)
-#	add_definitions(-DVK_EXAMPLE_DATA_DIR=\"${RESOURCE_INSTALL_DIR}/\")
-#	install(DIRECTORY data/ DESTINATION ${RESOURCE_INSTALL_DIR}/)
-#else()
-#	add_definitions(-DVK_EXAMPLE_DATA_DIR=\"${CMAKE_SOURCE_DIR}/data/\")
-#endif()
-
-# Compiler specific stuff
-IF(MSVC)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
-ENDIF(MSVC)
-
-IF(WIN32)
-	# Nothing here (yet)
-ELSE(WIN32)
-	link_libraries(${XCB_LIBRARIES} ${Vulkan_LIBRARY} ${Vulkan_LIBRARY} ${ASSIMP_LIBRARIES} ${WAYLAND_CLIENT_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
-ENDIF(WIN32)
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/")
+add_executable(Nocturne  ${HEADERS} ${SOURCES})
+target_link_libraries (Nocturne glew32 glew32s opengl32)
