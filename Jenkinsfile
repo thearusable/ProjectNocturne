@@ -32,7 +32,7 @@ pipeline {
 
         stage ('build'){
             steps {
-                sh 'cmake .'
+                sh 'cmake3 .'
                 sh 'make'
             }
         }
