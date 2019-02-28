@@ -32,7 +32,7 @@ pipeline {
 
         stage ('build'){
             steps {
-                sh 'cmake -G "Unix Makefiles" .'
+                sh 'cmake .'
             }
         }
     }
