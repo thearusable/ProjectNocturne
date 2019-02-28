@@ -1,12 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-       CXX = "g++-4.9.4"
-       LD = "g++-4.9.4"
-       ETL_MKL = 'true'
-    }
-
     stages {
         
         stage ('pre-analysis') {
