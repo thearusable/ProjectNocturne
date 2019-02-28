@@ -33,6 +33,7 @@ pipeline {
         stage ('build'){
             steps {
                 sh 'cmake .'
+                sh 'make'
             }
         }
     }
