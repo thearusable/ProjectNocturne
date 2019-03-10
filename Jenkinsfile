@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        
+
         stage ('pre-analysis') {
             steps {
                 //sh 'cppcheck --xml-version=2 -j3 --enable=all --std=c++11 `git ls-files "*.hpp" "*.cpp"` 2> cppcheck_report.xml'
@@ -15,8 +15,13 @@ pipeline {
 
         stage ('build'){
             steps {
-                sh 'cmake3 .'
-                sh 'make'
+                dir('build')
+                {
+                    sh'''
+                       cmake3 ..
+                       make
+                    '''
+                }
             }
         }
     }
