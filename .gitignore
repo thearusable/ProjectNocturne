@@ -347,3 +347,4 @@ Dependencies/*
 *.filters
 *.sln
 *vcxproj*
+build/*

@@ -78,7 +78,7 @@ add_executable(Nocturne ${HEADERS} ${SOURCES})
 target_link_libraries (Nocturne ${SDL_LIBRARY} ${OPENGL_opengl_LIBRARY})
 
 # Copy dll files
-if(CMAKE_BUILD_TYPE EQUAL "DEBUG")
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
    add_custom_command(TARGET Nocturne POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different  
            "${CMAKE_CURRENT_BINARY_DIR}/Dependencies/SDL2-2.0.9/Debug/SDL2d.dll" $<TARGET_FILE_DIR:Nocturne>)  
 else()
