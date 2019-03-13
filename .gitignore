@@ -349,4 +349,5 @@ _deps
 build/*
 .vscode
 SDL2-*
+glew-*
 *.zip
