@@ -17,7 +17,7 @@ pipeline {
             steps {
                 dir('build')
                 {
-                    sh 'cmake3 ..'
+                    sh 'cmake ..'
                     sh 'make'
                 }
             }
