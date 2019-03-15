@@ -4,7 +4,7 @@ FROM ubuntu:18.04
 # Update apps on the base image
 RUN apt-get -y update \
     && apt-get upgrade -y \
-    && apt-get install wget git cppcheck -y \
+    && apt-get install wget git cppcheck build-dep curl -y \
     && apt-get autoremove -y
 
 # Install gcc
@@ -25,3 +25,6 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0
     && tar -xzf cmake-3.14.0.tar.gz \
     && cd cmake-3.14.0 \
     && ./configure && make && make install && cd .. && rm -rf cmake-3.14.0 
+
+# install curl with https
+RUN git clone https://github.com/bagder/curl.git && cd curl && ./buildconf && ./configure && make && make install 
