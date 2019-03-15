@@ -1,7 +1,7 @@
 pipeline {
     agent {
-        docker {
-            image 'thearusable/nocturne'
+        dockerfile {
+            filename 'Docker'
         }
     }
 
