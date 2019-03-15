@@ -4,7 +4,7 @@ FROM ubuntu:18.04
 # Update apps on the base image
 RUN apt-get -y update \
     && apt-get upgrade -y \
-    && apt-get install wget git cppcheck curl autoconf -y \
+    && apt-get install wget git cppcheck curl autoconf libtool m4 automake -y \
     && apt-get autoremove -y
 
 # Install gcc
