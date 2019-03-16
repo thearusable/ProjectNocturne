@@ -11,7 +11,7 @@ RUN apt-get -y update \
 RUN apt-get install build-essential gcc-8 g++-8 -y \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 700 --slave /usr/bin/g++ g++ /usr/bin/g++-7 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /usr/bin/g++ g++ /usr/bin/g++-8 \
-    && apt-get autoremove -y 
+    && apt-get autoremove -y
 
 # Install opengl
 RUN apt-get install freeglut3 freeglut3-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx \
@@ -20,11 +20,14 @@ RUN apt-get install freeglut3 freeglut3-dev libglew1.5 libglew1.5-dev libglu1-me
 # Install SDL2
 RUN apt-get install libsdl2-dev -y && apt-get autoremove -y
 
-# build latest cmake
+# Install openssl which is requirement for curl --with-ssl
+RUN apt-get install libssl-dev -y && apt-get autoremove -y
+
+# Install curl with https
+RUN git clone https://github.com/bagder/curl.git && cd curl && ./buildconf && ./configure --with-ssl && make && make install
+
+# Build latest cmake
 RUN wget https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0.tar.gz \
     && tar -xzf cmake-3.14.0.tar.gz \
     && cd cmake-3.14.0 \
-    && ./configure && make && make install && cd .. && rm -rf cmake-3.14.0 
-
-# install curl with https
-RUN git clone https://github.com/bagder/curl.git && cd curl && ./buildconf && ./configure && make && make install 
+    && ./bootstrap --system-curl && make && make install && cd .. && rm -rf cmake-3.14.0
