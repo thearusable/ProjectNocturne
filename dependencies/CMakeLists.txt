@@ -10,10 +10,10 @@ function(FIND_AND_DOWNLOAD_ZIP_RESOURCE ResourceURL ResourceName Version)
       file(DOWNLOAD ${ResourceURL} ${CMAKE_CURRENT_SOURCE_DIR}/${ResourceName}.zip SHOW_PROGRESS STATUS STAT LOG LG)
 
       # print status and log if file wasn't downloaded properly
-
-      message("File status = ${STAT}")
-      message("File LOG = ${LG}")
-
+      if(NOT("0" IN_LIST STAT))
+         message("File status = ${STAT}")
+         message("File LOG = ${LG}")
+      endif()
 
       # unzip
 	   execute_process(WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} COMMAND ${CMAKE_COMMAND} -E tar xvf ${ResourceName}.zip)
