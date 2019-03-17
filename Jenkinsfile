@@ -25,7 +25,8 @@ pipeline {
 
         stage ('pre-analysis') {
             steps {
-                //sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
+                sh 'echo "test"'
+		//sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
             }
         }
 
