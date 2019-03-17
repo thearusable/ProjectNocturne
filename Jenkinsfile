@@ -1,19 +1,31 @@
 pipeline {
-    agent {
-        dockerfile {
-            filename 'Dockerfile'
-        }
+
+    environment {
+        registry = "thearusable/nocturne"
+        registryCredential = 'dockerhub'
     }
+
+    //agent {
+    //    dockerfile {
+    //        filename 'Dockerfile'
+    //    }
+    //}
+
+    agent any
 
     stages {
 
+	stage ('Building image') {
+            steps{
+                script {
+                     docker.build registry + ":$BUILD_NUMBER"
+                }
+            }
+        }
+
         stage ('pre-analysis') {
             steps {
-                sh 'cppcheck --enable=all --inconclusive --xml --xml-version=2 . 2> cppcheck_report.xml'
-                //sh 'cppcheck --enable=warning,performance,portability,information,missingInclude \
-                //    --std=c++11 --library=qt.cfg --verbose --quiet \
-                //    --template="[{severity}][{id}] {message} {callstack} (On {file}:{line})" \
-                //    `git ls-files "*.hpp" "*.cpp"` '
+                sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
             }
         }
 
