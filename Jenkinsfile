@@ -9,7 +9,7 @@ pipeline {
 
         stage ('pre-analysis') {
             steps {
-                sh 'cppcheck --enable=all --std=c+11 --inconclusive --xml --xml-version=2 . 2> ./tmp/cppcheck_report.xml'
+                sh 'cppcheck --enable=all --std=c+11 --inconclusive --xml --xml-version=2 . 2> cppcheck_report.xml'
                 //sh 'cppcheck --enable=warning,performance,portability,information,missingInclude \
                 //    --std=c++11 --library=qt.cfg --verbose --quiet \
                 //    --template="[{severity}][{id}] {message} {callstack} (On {file}:{line})" \
@@ -29,7 +29,7 @@ pipeline {
     }
     post {
 	always {
-	    publishCppcheck pattern:'./tmp/cppcheck_report.xml'
+	    publishCppcheck pattern:'cppcheck_report.xml'
 	}        
     }
 }
