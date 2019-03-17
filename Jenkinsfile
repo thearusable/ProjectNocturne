@@ -18,14 +18,14 @@ pipeline {
 	stage ('Building image') {
             steps{
                 script {
-                     docker.build registry + ":$BUILD_NUMBER"
+                     docker.build registry
                 }
             }
         }
 
         stage ('pre-analysis') {
             steps {
-                sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
+                //sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
             }
         }
 
