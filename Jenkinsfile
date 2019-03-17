@@ -5,23 +5,21 @@ pipeline {
         registryCredential = 'dockerhub'
     }
 
-    //agent {
-    //    dockerfile {
-    //        filename 'Dockerfile'
-    //    }
-    //}
-
-    agent any
+    agent {
+        dockerfile {
+            filename 'Dockerfile'
+        }
+    }
 
     stages {
 
-	stage ('Building image') {
-            steps{
-                script {
-                     docker.build registry
-                }
-            }
-        }
+	//stage ('Building image') {
+        //    steps{
+        //        script {
+        //             docker.build registry
+        //        }
+        //    }
+        //}
 
         stage ('pre-analysis') {
             steps {
