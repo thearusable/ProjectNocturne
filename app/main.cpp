@@ -13,8 +13,9 @@ main(int argc, char* argv[])
 
 	while (1)
 	{
-		//SDL_Event e;
-		//SDL_PollEvent(&e);
+		window.Clear(0.0f, 0.0f, 1.0f, 0.0f);
+		window.HandleInput();
+		window.SwapBuffers();
 	}
 
 	return 0;
