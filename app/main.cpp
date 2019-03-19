@@ -14,7 +14,6 @@ main(int argc, char* argv[])
 	while (1)
 	{
 		window.Clear(0.0f, 0.0f, 1.0f, 0.0f);
-		window.HandleInput();
 		window.SwapBuffers();
 	}
 

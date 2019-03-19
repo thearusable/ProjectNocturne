@@ -6,18 +6,6 @@
 namespace noc::window
 {
 
-template <class ListenerType>
-static void
-GenericRemoveListener(std::vector<ListenerType*>& vector, ListenerType* listener)
-{
-	const auto listenerIt = std::find(vector.begin(), vector.end(), listener);
-
-	if(listenerIt != vector.end())
-	{
-		vector.erase(listenerIt);
-	}
-}
-
 Window::Window(uint32_t width, uint32_t height, const std::string& title)
    : m_width(width)
    , m_height(height)
@@ -47,30 +35,6 @@ Window::Window(uint32_t width, uint32_t height, const std::string& title)
 	glEnable(GL_CULL_FACE);
 }
 
-void
-Window::RegisterMouseListener(IMouseListener* listener)
-{
-	m_mouseListeners.push_back(listener);
-}
-
-void
-Window::RegisterKeyboardListener(IKeyboardListener* listener)
-{
-	m_keyboardListeners.push_back(listener);
-}
-
-void
-Window::RemoveMouseListener(IMouseListener* listener)
-{
-	GenericRemoveListener(m_mouseListeners, listener);
-}
-
-void
-Window::RemoveKeyboardListener(IKeyboardListener* listener)
-{
-	GenericRemoveListener(m_keyboardListeners, listener);
-}
-
 Window::~Window()
 {
 	SDL_DestroyWindow(m_pWindow);
@@ -94,79 +58,6 @@ Window::Resize(uint32_t newWidth, uint32_t newHeight)
 
 	m_height = newHeight;
 	m_width  = newWidth;
-}
-
-void
-Window::HandleInput()
-{
-	SDL_Event event;
-	while(SDL_PollEvent(&event))
-	{
-		switch(event.type)
-		{
-			// MOUSE EVENTS
-			case SDL_MOUSEMOTION:
-			case SDL_MOUSEBUTTONDOWN:
-			case SDL_MOUSEBUTTONUP:
-			case SDL_MOUSEWHEEL:
-				NotifyMouseListeners(event);
-				break;
-
-			// KEYBOARD EVENTS
-			case SDL_KEYDOWN:
-			case SDL_KEYUP:
-			case SDL_KEYMAPCHANGED:
-			case SDL_TEXTINPUT:
-			case SDL_TEXTEDITING:
-				NotifyKeyboardListeners(event);
-				break;
-				
-			// OTHER EVENTS
-			default:
-				break;
-		}
-	}
-}
-
-void
-Window::NotifyMouseListeners(const SDL_Event& event)
-{
-	switch(event.type)
-	{
-		case SDL_MOUSEBUTTONDOWN:
-		case SDL_MOUSEBUTTONUP:
-			for(auto listener : m_mouseListeners)
-			{
-				listener->HandleMouseButtonEvent(event.button);
-			}
-			break;
-
-		case SDL_MOUSEMOTION:
-			for(auto listener : m_mouseListeners)
-			{
-				listener->HandleMouseMotionEvent(event.motion);
-			}
-			break;
-
-		case SDL_MOUSEWHEEL:
-			for(auto listener : m_mouseListeners)
-			{
-				listener->HandleMouseWheelEvent(event.wheel);
-			}
-			break;
-
-		default:
-			break;
-	}
-}
-
-void
-Window::NotifyKeyboardListeners(const SDL_Event& event)
-{
-	for(auto listener : m_keyboardListeners) 
-	{
-		listener->HandleKeyboardEvent(static_cast<SDL_EventType>(event.type), event.key.keysym);
-	}
 }
 
 void
