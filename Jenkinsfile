@@ -45,7 +45,7 @@ pipeline {
         stage ('Publish image'){
             steps {
                 script{
-                    if (env.BRANCH_NAME == "master"){
+                    if (env.BRANCH_NAME == "feature/static_analysis"){
                         docker.withRegistry('', registryCredential) {
                             image.push("latest")
                         }
