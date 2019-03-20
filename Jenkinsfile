@@ -6,22 +6,21 @@ pipeline {
         image = ''
     }
 
-    //agent {
-    //    dockerfile {
-    //        filename 'Dockerfile'
-    //    }
-    //}
-
     agent {
-    //stages {
-
-	    stage ('Building image') {
-            steps{
-                script {
-                    image = docker.build registry
-                }
-            }
+        dockerfile {
+            filename 'Dockerfile'
         }
+    }
+
+    stages {
+
+	    //stage ('Building image') {
+        //    steps{
+        //        script {
+        //            image = docker.build registry
+        //        }
+        //    }
+        //}
 
         stage ('pre-analysis') {
             steps {
@@ -46,17 +45,17 @@ pipeline {
                 script {
                     docker.withRegistry('', registryCredential)
                     {
-                        image.push("latest")
+                        sh 'docker push thearusable/nocturne'
+                        //image.push("latest")
                     }
                 }
             }
         }
-   // }
+    }
     //post {
 	//    always {
             //sh 'docker push thearusable/nocturne'
 	        //publishCppcheck pattern:'cppcheck_report.xml'
 	//    }           
     //}
-    }
 }
