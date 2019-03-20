@@ -45,9 +45,12 @@ pipeline {
         stage ('Publish image'){
             steps {
                 script{
-                    docker.withRegistry('', registryCredential) {
-                        // following commands will be executed within logged docker registry
-                        image.push("latest")
+                    if (env.BRANCH_NAME == "master"){
+                        docker.withRegistry('', registryCredential) {
+                            image.push("latest")
+                        }
+                    } else {
+                        sh 'echo "Not a develop branch - SKIPPING."'
                     }
                 }
             }
