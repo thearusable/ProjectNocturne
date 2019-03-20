@@ -45,7 +45,7 @@ pipeline {
                 script{
                 docker.withRegistry('', registryCredential) {
                     // following commands will be executed within logged docker registry
-                    sh 'docker push $registry'
+                    sh 'docker push thearusable/nocturne'
                 }
                 }
             }
