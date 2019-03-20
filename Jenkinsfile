@@ -3,6 +3,7 @@ pipeline {
     environment {
         registry = "thearusable/nocturne"
         registryCredential = 'dockerhub'
+        image = ''
     }
 
     agent {
@@ -13,13 +14,13 @@ pipeline {
 
     stages {
 
-	    //stage ('Building image') {
-        //    steps{
-        //        script {
-        //             docker.build registry
-        //        }
-        //    }
-        //}
+	    stage ('Building image') {
+            steps{
+                script {
+                    image = docker.build registry
+                }
+            }
+        }
 
         stage ('pre-analysis') {
             steps {
@@ -41,7 +42,11 @@ pipeline {
     }
     post {
 	    always {
-            sh 'docker push thearusable/nocturne'
+            docker.withRegistry('', registryCredential)
+            {
+                image.push("latest")
+            }
+            //sh 'docker push thearusable/nocturne'
 	        //publishCppcheck pattern:'cppcheck_report.xml'
 	    }           
     }
