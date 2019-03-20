@@ -42,7 +42,7 @@ pipeline {
 
         stage ('Publish image'){
             steps {
-                withDockerRegistry('', registryCredential) {
+                docker.withRegistry('', registryCredential) {
                     // following commands will be executed within logged docker registry
                     sh 'docker push $registry'
                 }
