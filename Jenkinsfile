@@ -13,7 +13,7 @@ pipeline {
     //}
 
     agent {
-    stages {
+    //stages {
 
 	    stage ('Building image') {
             steps{
@@ -51,7 +51,7 @@ pipeline {
                 }
             }
         }
-    }
+   // }
     //post {
 	//    always {
             //sh 'docker push thearusable/nocturne'
