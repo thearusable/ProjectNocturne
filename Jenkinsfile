@@ -23,7 +23,7 @@ pipeline {
 
         stage ('pre-analysis') {
             steps {
-                sh 'echo "test"'
+                sh 'echo "pre-analysis"'
 		        //sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
             }
         }
@@ -32,8 +32,9 @@ pipeline {
             steps {
                 dir('build')
                 {
-                    sh 'cmake ..'
-                    sh 'make'
+                    sh 'echo "build"'
+                    //sh 'cmake ..'
+                    //sh 'make'
                 }
             }
         }
