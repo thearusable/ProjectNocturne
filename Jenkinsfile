@@ -29,7 +29,9 @@ pipeline {
         }
 
         stage ('Pre-analysis') {
-		    sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
+            steps {
+		        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
+            }
         }
         
         stage ('Build'){
