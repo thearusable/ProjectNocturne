@@ -20,8 +20,7 @@ RUN apt-get install build-essential gcc-8 g++-8 -y \
     && apt-get autoremove -y
 
 # Install opengl
-RUN apt-get install freeglut3 freeglut3-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx \
-    libgl1-mesa-dev -y \
+RUN apt-get install freeglut3 freeglut3-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev -y \
     && apt-get autoremove -y
 
 # Build curl with https
