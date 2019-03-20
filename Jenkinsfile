@@ -51,10 +51,10 @@ pipeline {
             }
         }
     }
-    post {
-	    always {
+    //post {
+	//    always {
             //sh 'docker push thearusable/nocturne'
 	        //publishCppcheck pattern:'cppcheck_report.xml'
-	    }           
-    }
+	//    }           
+    //}
 }
