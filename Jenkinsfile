@@ -42,9 +42,11 @@ pipeline {
     }
     post {
 	    always {
-            docker.withRegistry('', registryCredential)
-            {
-                image.push("latest")
+            stage ('end'){
+                docker.withRegistry('', registryCredential)
+                {
+                    image.push("latest")
+                }
             }
             //sh 'docker push thearusable/nocturne'
 	        //publishCppcheck pattern:'cppcheck_report.xml'
