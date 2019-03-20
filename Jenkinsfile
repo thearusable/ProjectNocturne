@@ -14,13 +14,13 @@ pipeline {
 
     stages {
 
-	    //stage ('Building image') {
-        //    steps{
-        //        script {
-        //            image = docker.build registry
-        //        }
-        //    }
-        //}
+	    stage ('Building image') {
+            steps{
+                script {
+                    image = docker.build registry
+                }
+            }
+        }
 
         stage ('pre-analysis') {
             steps {
@@ -43,10 +43,10 @@ pipeline {
         stage ('Publish image'){
             steps {
                 script{
-                docker.withRegistry('', registryCredential) {
-                    // following commands will be executed within logged docker registry
-                    sh 'docker push thearusable/nocturne'
-                }
+                    docker.withRegistry('', registryCredential) {
+                        // following commands will be executed within logged docker registry
+                        image.push("latest")
+                    }
                 }
             }
 
