@@ -13,7 +13,7 @@ pipeline {
 
     stages {
 
-	//stage ('Building image') {
+	    //stage ('Building image') {
         //    steps{
         //        script {
         //             docker.build registry
@@ -24,7 +24,7 @@ pipeline {
         stage ('pre-analysis') {
             steps {
                 sh 'echo "test"'
-		//sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
+		        //sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
             }
         }
 
@@ -39,8 +39,9 @@ pipeline {
         }
     }
     post {
-	always {
-	    publishCppcheck pattern:'cppcheck_report.xml'
-	}        
+	    always {
+            sh 'docker push thearusable/nocturne'
+	        //publishCppcheck pattern:'cppcheck_report.xml'
+	    }           
     }
 }
