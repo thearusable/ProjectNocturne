@@ -40,7 +40,13 @@ pipeline {
             }
         }
 
-        //stage ('Publish image'){
+        stage ('Publish image'){
+
+            withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
+                // following commands will be executed within logged docker registry
+                sh 'docker push $registry'
+            }
+
         //    steps {
         //        script {
                     //docker.withRegistry('', registryCredential)
@@ -50,15 +56,15 @@ pipeline {
                     //}
         //        }
         //    }
-        //}
+        }
     }
-    post {
-	    always {
-            script{
-                sh 'docker push thearusable/nocturne'
-            }
+    //post {
+	//    always {
+    //        script{
+    //            sh 'docker push thearusable/nocturne'
+    //        }
             //sh 'docker push thearusable/nocturne'
 	        //publishCppcheck pattern:'cppcheck_report.xml'
-	    }           
-    }
+	//    }           
+   // }
 }
