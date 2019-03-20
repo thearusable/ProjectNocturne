@@ -39,15 +39,18 @@ pipeline {
                 }
             }
         }
-    }
-    post {
-	    always {
-            stage ('end'){
+
+        stage ('Publish image'){
+            steps {
                 docker.withRegistry('', registryCredential)
                 {
                     image.push("latest")
                 }
             }
+        }
+    }
+    post {
+	    always {
             //sh 'docker push thearusable/nocturne'
 	        //publishCppcheck pattern:'cppcheck_report.xml'
 	    }           
