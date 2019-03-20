@@ -6,46 +6,18 @@ pipeline {
         image = ''
     }
 
-    //agent {
-    //    dockerfile {
-    //        filename 'Dockerfile'
-    //    }
-    //}
-
     agent any
 
     stages {
 
-	    stage ('Building image') {
+	    stage ('Build image') {
             steps{
                 script {
+                    // build image
                     image = docker.build registry
-                }
-            }
-        }
 
-        stage ('pre-analysis') {
-            steps {
-                sh 'echo "pre-analysis"'
-		        //sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
-            }
-        }
-
-        stage ('build'){
-            steps {
-                dir('build')
-                {
-                    sh 'echo "build"'
-                    //sh 'cmake ..'
-                    //sh 'make'
-                }
-            }
-        }
-
-        stage ('Publish image'){
-            steps {
-                script{
-                    if (env.BRANCH_NAME == "feature/static_analysis"){
+                    // only push docker image when build from develop branch
+                    if (env.BRANCH_NAME == "develop"){
                         docker.withRegistry('', registryCredential) {
                             image.push("latest")
                         }
@@ -54,25 +26,26 @@ pipeline {
                     }
                 }
             }
+        }
 
-        //    steps {
-        //        script {
-                    //docker.withRegistry('', registryCredential)
-                    //{
-        //                sh 'docker push thearusable/nocturne'
-                        //image.push("latest")
-                    //}
-        //        }
-        //    }
+        stage ('Pre-analysis') {
+		        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
+            }
+        }
+
+        stage ('Build'){
+            steps {
+                dir('build')
+                {
+                    sh 'cmake ..'
+                    sh 'make'
+                }
+            }
         }
     }
-    //post {
-	//    always {
-    //        script{
-    //            sh 'docker push thearusable/nocturne'
-    //        }
-            //sh 'docker push thearusable/nocturne'
-	        //publishCppcheck pattern:'cppcheck_report.xml'
-	//    }           
-   // }
+    post {
+	    always {
+	        publishCppcheck pattern:'cppcheck_report.xml'
+	    }           
+    }
 }
