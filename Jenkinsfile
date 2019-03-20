@@ -42,9 +42,11 @@ pipeline {
 
         stage ('Publish image'){
             steps {
-                docker.withRegistry('', registryCredential)
-                {
-                    image.push("latest")
+                script {
+                    docker.withRegistry('', registryCredential)
+                    {
+                        image.push("latest")
+                    }
                 }
             }
         }
