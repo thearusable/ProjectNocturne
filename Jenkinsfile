@@ -43,11 +43,11 @@ pipeline {
         stage ('Publish image'){
             steps {
                 script {
-                    docker.withRegistry('', registryCredential)
-                    {
+                    //docker.withRegistry('', registryCredential)
+                    //{
                         sh 'docker push thearusable/nocturne'
                         //image.push("latest")
-                    }
+                    //}
                 }
             }
         }
