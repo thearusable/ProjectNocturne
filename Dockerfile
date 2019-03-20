@@ -1,6 +1,8 @@
 # Get ubuntu
 FROM ubuntu:18.04
 
+MAINTAINER Arkadiusz Szczepkowicz <arek.szczepkowicz@gmail.com>
+
 # Config
 ARG SDL2_VERSION=2.0.9
 ARG CMAKE_VERSION=3.14.0

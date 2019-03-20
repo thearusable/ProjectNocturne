@@ -10,6 +10,12 @@ pipeline {
 
     stages {
 
+        stage ('Pre-analysis') {
+            steps {
+		        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
+            }
+        }
+
 	    stage ('Build image') {
             steps{
                 script {
@@ -25,12 +31,6 @@ pipeline {
                         sh 'echo "Not a develop branch - SKIPPING."'
                     }
                 }
-            }
-        }
-
-        stage ('Pre-analysis') {
-            steps {
-		        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
             }
         }
         
