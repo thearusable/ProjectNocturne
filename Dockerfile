@@ -10,7 +10,7 @@ ARG CMAKE_VERSION=3.14.0
 # Update apps on the base image
 RUN apt-get -y update \
     && apt-get upgrade -y \
-    && apt-get install wget git cppcheck curl autoconf libtool m4 automake libssl-dev zlib1g-dev -y \
+    && apt-get install wget git curl autoconf libtool m4 automake libssl-dev zlib1g-dev -y \
     && apt-get autoremove -y
 
 # Install gcc
