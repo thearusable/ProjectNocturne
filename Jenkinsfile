@@ -6,12 +6,13 @@ pipeline {
         image = ''
     }
 
-    agent {
-        dockerfile {
-            filename 'Dockerfile'
-        }
-    }
+    //agent {
+    //    dockerfile {
+    //        filename 'Dockerfile'
+    //    }
+    //}
 
+    agent {
     stages {
 
 	    stage ('Building image') {
@@ -57,4 +58,5 @@ pipeline {
 	        //publishCppcheck pattern:'cppcheck_report.xml'
 	//    }           
     //}
+    }
 }
