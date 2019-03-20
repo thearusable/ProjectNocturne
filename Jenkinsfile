@@ -40,22 +40,25 @@ pipeline {
             }
         }
 
-        stage ('Publish image'){
-            steps {
-                script {
+        //stage ('Publish image'){
+        //    steps {
+        //        script {
                     //docker.withRegistry('', registryCredential)
                     //{
-                        sh 'docker push thearusable/nocturne'
+        //                sh 'docker push thearusable/nocturne'
                         //image.push("latest")
                     //}
-                }
-            }
-        }
+        //        }
+        //    }
+        //}
     }
-    //post {
-	//    always {
+    post {
+	    always {
+            script{
+                sh 'docker push thearusable/nocturne'
+            }
             //sh 'docker push thearusable/nocturne'
 	        //publishCppcheck pattern:'cppcheck_report.xml'
-	//    }           
-    //}
+	    }           
+    }
 }
