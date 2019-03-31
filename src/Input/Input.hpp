@@ -1,40 +1,55 @@
 #pragma once
 
-#include <memory>
 #include <string>
+#include <unordered_map>
+#include <optional>
 #include <vector>
-#include <IMouseListener.hpp>
-#include <IKeyboardListener.hpp>
+#include "KeyCodes.hpp"
 
 namespace noc::input
 {
+class UserControllable;
+
 class Input
 {
+	using actionKeyPair = std::pair<std::string, NOC_KEY>;
+
+	std::unordered_map<std::string, NOC_KEY> m_actionKeyMap;
+	std::vector<std::optional<actionKeyPair>> m_actionKeyState;
+
+// TODO: CHANGE TO VEC2
+	uint32_t m_mouseX;
+	uint32_t m_mouseY;
+
 public:
+	// @brief Used by UserControllable object to register for certain action
+	// @param sactionName string represented action
+	// @param state state of the action in which user is interested
 	void
-	RegisterMouseListener(IMouseListener* listener);
+	RegisterForActionEvent(UserControllable* object, std::string_view actionName, NOC_KEY_STATE state);
+
+	bool
+	CheckKeyPressed(NOC_KEY keyKode);
+
+	bool
+	CheckAction(std::string_view action);
 
 	void
-	RegisterKeyboardListener(IKeyboardListener* listener);
+	SetUpKeyMap(std::string_view configFile);
 
-	void
-	RemoveMouseListener(IMouseListener* listener);
-
-	void
-	RemoveKeyboardListener(IKeyboardListener* listener);
-	
 	void
 	HandleInput();
-	
 private:
-	std::vector<IKeyboardListener*> m_keyboardListeners;
-	std::vector<IMouseListener*> m_mouseListeners;
 
 	void
-	NotifyMouseListeners(const SDL_Event& event);
+	SetActionKeyPressed(NOC_KEY keyCode);
 
 	void
-	NotifyKeyboardListeners(const SDL_Event& event);
+	SetActionKeyReleased(NOC_KEY keyCode);
+
+// TODO CHANGE TO VEC2
+	void
+	SetMousePosition(uint32_t x, uint32_t y);
 };
 
 }   // namespace noc::input

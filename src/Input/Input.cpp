@@ -1,47 +1,10 @@
 #include "Input.hpp"
-#include <SDL.h>
+#include <SDL_events.h>
 #include <functional>
+#include <iostream>
 
 namespace noc::input
 {
-
-template <class ListenerType>
-static void
-GenericRemoveListener(std::vector<ListenerType*>& vector, ListenerType* listener)
-{
-	const auto listenerIt = std::find(vector.begin(), vector.end(), listener);
-
-	if(listenerIt != vector.end())
-	{
-		vector.erase(listenerIt);
-	}
-}
-
-void
-
-
-Input::RegisterMouseListener(IMouseListener* listener)
-{
-	m_mouseListeners.push_back(listener);
-}
-
-void
-Input::RegisterKeyboardListener(IKeyboardListener* listener)
-{
-	m_keyboardListeners.push_back(listener);
-}
-
-void
-Input::RemoveMouseListener(IMouseListener* listener)
-{
-	GenericRemoveListener(m_mouseListeners, listener);
-}
-
-void
-Input::RemoveKeyboardListener(IKeyboardListener* listener)
-{
-	GenericRemoveListener(m_keyboardListeners, listener);
-}
 
 void
 Input::HandleInput()
@@ -49,70 +12,38 @@ Input::HandleInput()
 	SDL_Event event;
 	while(SDL_PollEvent(&event))
 	{
-		switch(event.type)
+		if (event.key.keysym.scancode != SDL_GetScancodeFromKey(event.key.keysym.sym))
 		{
-			// MOUSE EVENTS
-			case SDL_MOUSEMOTION:
-			case SDL_MOUSEBUTTONDOWN:
-			case SDL_MOUSEBUTTONUP:
-			case SDL_MOUSEWHEEL:
-				NotifyMouseListeners(event);
-				break;
-
-			// KEYBOARD EVENTS
-			case SDL_KEYDOWN:
-			case SDL_KEYUP:
-			case SDL_KEYMAPCHANGED:
-			case SDL_TEXTINPUT:
-			case SDL_TEXTEDITING:
-				NotifyKeyboardListeners(event);
-				break;
-				
-			// OTHER EVENTS
-			default:
-				break;
+			//printf("Physical %s acting as %s key\n", SDL_GetScancodeName(event.key.keysym.scancode), SDL_GetKeyName(event.key.keysym.sym));
+			std::cout << SDL_GetScancodeName(event.key.keysym.scancode) << SDL_GetKeyName(event.key.keysym.sym) << '\n';
 		}
-	}
-}
+    		
 
-void
-Input::NotifyMouseListeners(const SDL_Event& event)
-{
-	switch(event.type)
-	{
-		case SDL_MOUSEBUTTONDOWN:
-		case SDL_MOUSEBUTTONUP:
-			for(auto listener : m_mouseListeners)
-			{
-				listener->HandleMouseButtonEvent(event.button);
-			}
-			break;
+		// switch(event.type)
+		// {
+		// 	case SDL_MOUSEMOTION:
+		// 		SetMousePosition(event.motion.x, event.motion.y);
+		// 		break;
 
-		case SDL_MOUSEMOTION:
-			for(auto listener : m_mouseListeners)
-			{
-				listener->HandleMouseMotionEvent(event.motion);
-			}
-			break;
+		// 	case SDL_MOUSEBUTTONDOWN:
+		// 		SetActionKeyPressed();
+		// 		break;
+		// 	case SDL_KEYDOWN:
+		// 		SetActionKeyPressed();
+		// 		break;
 
-		case SDL_MOUSEWHEEL:
-			for(auto listener : m_mouseListeners)
-			{
-				listener->HandleMouseWheelEvent(event.wheel);
-			}
-			break;
+		// 	case SDL_MOUSEBUTTONUP:
+		// 	case SDL_KEYUP:
+		// 		SetActionKeyReleased();
+		// 		break;
 
-		default:
-			break;
-	}
-}
+		// 	case SDL_MOUSEWHEEL:
+		// 		break;
 
-void
-Input::NotifyKeyboardListeners(const SDL_Event& event)
-{
-	for(auto listener : m_keyboardListeners) 
-	{
-		listener->HandleKeyboardEvent(static_cast<SDL_EventType>(event.type), event.key.keysym);
+		// 	// OTHER EVENTS
+		// 	default:
+		// 		break;
+		// }
 	}
 }
 
