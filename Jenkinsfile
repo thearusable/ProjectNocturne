@@ -30,11 +30,11 @@ pipeline {
         //    }
         //}
 
-        stage ('Pre-analysis') {
-            steps {
-		        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
-            }
-        }
+        //stage ('Pre-analysis') {
+        //    steps {
+		//        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
+        //    }
+        //}
         
         stage ('Build engine'){
             steps {
@@ -46,9 +46,9 @@ pipeline {
             }
         }
     }
-    post {
-	    always {
-	        publishCppcheck pattern:'cppcheck_report.xml'
-	    }           
-    }
+    //post {
+	//    always {
+	//        publishCppcheck pattern:'cppcheck_report.xml'
+	//    }           
+    //}
 }
