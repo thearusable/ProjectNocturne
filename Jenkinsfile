@@ -13,6 +13,7 @@ pipeline {
     agent {
         dockerfile {
             filename 'Dockerfile'
+            args '-t thearusable/nocturne . '
         }
     }
 
