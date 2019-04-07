@@ -6,7 +6,7 @@ MAINTAINER Arkadiusz Szczepkowicz <arek.szczepkowicz@gmail.com>
 # Update apps on the base image
 RUN apt-get -y update \
     && apt-get upgrade -y \
-    && apt-get install wget git curl autoconf libtool m4 automake libssl-dev zlib1g-dev -y \
+    && apt-get install wget git curl autoconf libtool m4 automake libssl-dev zlib1g-dev cppcheck -y \
     && apt-get autoremove -y
 
 # Install gcc
