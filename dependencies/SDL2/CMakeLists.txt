@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 
-set(SDL2_VERSION 2.0.0)
+set(SDL2_VERSION 2.0.9)
 
 find_package(SDL2 ${SDL2_VERSION})
 

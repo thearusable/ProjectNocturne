@@ -24,7 +24,7 @@ RUN git clone https://github.com/bagder/curl.git && cd curl && ./buildconf && ./
     && cd .. && rm -rf curl
 
 # Config for SDL2 and CMake
-ARG SDL2_VERSION=2.0.0
+ARG SDL2_VERSION=2.0.9
 ARG CMAKE_VERSION=3.14.1
 
 # Build SDL2
