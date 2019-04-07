@@ -20,7 +20,7 @@ pipeline {
     stages {
 
         stage('Publish image'){
-            agent { none }
+            agent none
             steps{
                 script{
                     sh 'docker push thearusable/nocturne:latest'
