@@ -40,8 +40,8 @@ pipeline {
                 dir('build')
                 {
                     sh 'cmake ..'
-                    sh 'make'
-                    sh 'make -s list'
+                    sh 'make all'
+                    sh 'make test'
                 }
             }
         }
