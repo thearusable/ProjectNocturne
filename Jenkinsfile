@@ -10,17 +10,28 @@ pipeline {
     //    docker { image 'thearusable/nocturne:latest' }
     //}
 
-    agent {
-        dockerfile {
-            filename 'Dockerfile'
-            additionalBuildArgs '-t thearusable/nocturne'
-        }
-    }
+    agent none
+
+    //agent {
+    //    dockerfile {
+    //        filename 'Dockerfile'
+    //        additionalBuildArgs '-t thearusable/nocturne'
+    //    }
+    //}
 
     stages {
 
+        stage('Build image'){
+            agent any
+            steps{
+                script{
+                    sh 'docker build -t thearusable/nocturne .'
+                }
+            }
+        }
+
         stage('Publish image'){
-            agent none
+            agent any
             steps{
                 script{
                     sh 'docker push thearusable/nocturne:latest'
