@@ -79,6 +79,7 @@ pipeline {
         //}
         
         stage ('Build engine'){
+            agent { docker { image 'thearusable/nocturne:latest' } }
             steps {
                 dir('build')
                 {
