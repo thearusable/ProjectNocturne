@@ -29,8 +29,10 @@ pipeline {
         stage ('Static analysis') {
             agent { docker { image 'thearusable/nocturne:latest' } }
             steps {
-                //  run cppcheck on codebase
-		        sh 'cppcheck -v --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
+                //  run cppcheck on code
+		        sh 'cppcheck -v --enable=all --inconclusive --verbose --xml --xml-version=2 src 2> cppcheck_report.xml'
+                // run cppcheck on tests
+                sh 'cppcheck -v --enable=all --inconclusive --verbose --xml --xml-version=2 test 2> cppcheck_report.xml'
             }
         }
         
