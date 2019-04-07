@@ -30,14 +30,27 @@ pipeline {
             }
         }
 
-        stage('Publish image'){
+        //stage('Publish image'){
+        //    agent any
+        //    steps{
+        //        script{
+        //            sh 'docker push thearusable/nocturne:latest'
+        //        }
+        //    }
+        //}
+
+        stage('Docker Push') {
             agent any
-            steps{
-                script{
+            steps {
+                docker.withRegistry( '', registryCredential ) {
+                    sh 'docker push thearusable/nocturne:latest'
+                }
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
                     sh 'docker push thearusable/nocturne:latest'
                 }
             }
-        }
+    }
 
         //stage ('Build image') {
         //    steps{
