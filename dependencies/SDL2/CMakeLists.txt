@@ -2,10 +2,14 @@ cmake_minimum_required(VERSION 3.13)
 
 set(SDL2_VERSION 2.0.9)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/Dependencies/SDL2")
+
+message(INFO "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
+
 find_package(SDL2 ${SDL2_VERSION})
 
 if(NOT ${SDL2_FOUND})
-   FIND_AND_DOWNLOAD_ZIP_RESOURCE(https://www.libsdl.org/release/SDL2-2.0.9.zip SDL2 ${SDL2_VERSION})
+   FIND_AND_DOWNLOAD_ZIP_RESOURCE(https://www.libsdl.org/release/SDL2-${SDL2_VERSION}.zip SDL2 ${SDL2_VERSION})
    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/SDL2-${SDL2_VERSION})
 endif()
 
