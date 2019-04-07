@@ -3,7 +3,6 @@ pipeline {
     environment {
         registry = "thearusable/nocturne"
         registryCredential = 'dockerhub'
-        image = ''
     }
 
     //agent {
@@ -25,7 +24,7 @@ pipeline {
             agent any
             steps{
                 script{
-                    sh 'docker build -t thearusable/nocturne .'
+                    sh 'docker build -t ${registry} .'
                 }
             }
         }
@@ -44,7 +43,7 @@ pipeline {
             steps {
                 script{
                     docker.withRegistry( '', registryCredential ) {
-                        sh 'docker push thearusable/nocturne:latest'
+                        sh 'docker push ${registry}:latest'
                     }
                 }
                 //withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
