@@ -26,13 +26,13 @@ pipeline {
                 }
             }
         }
-        //stage ('Static analysis') {
-        //    agent { docker { image 'thearusable/nocturne:latest' } }
-        //    steps {
+        stage ('Static analysis') {
+            agent { docker { image 'thearusable/nocturne:latest' } }
+            steps {
                 //  run cppcheck on codebase
-		//        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
-        //    }
-        //}
+		        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
+            }
+        }
         
         stage ('Build engine'){
             agent { docker { image 'thearusable/nocturne:latest' } }
@@ -46,9 +46,9 @@ pipeline {
             }
         }
     }
-    //post {
-	//    always {
-	//        publishCppcheck pattern:'cppcheck_report.xml'
-	//    }           
-    //}
+    post {
+	    always {
+	        publishCppcheck pattern:'cppcheck_report.xml'
+	    }           
+    }
 }
