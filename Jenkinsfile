@@ -19,6 +19,14 @@ pipeline {
 
     stages {
 
+        stage('Publish image'){
+            steps{
+                script{
+                    sh 'docker push thearusable/nocturne:latest'
+                }
+            }
+        }
+
         //stage ('Build image') {
         //    steps{
         //        script {
