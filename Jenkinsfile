@@ -13,7 +13,7 @@ pipeline {
     agent {
         dockerfile {
             filename 'Dockerfile'
-            additionalBuildArgs '-t thearusable/nocturne . '
+            additionalBuildArgs '-t thearusable/nocturne'
         }
     }
 
