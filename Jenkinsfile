@@ -6,17 +6,13 @@ pipeline {
         image = ''
     }
 
-    agent any
+    agent {
+        docker { image 'thearusable:nocturne' }
+    }
 
     stages {
 
-        stage ('Pre-analysis') {
-            steps {
-		        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
-            }
-        }
-
-	    stage ('Build image') {
+        stage ('Build image') {
             steps{
                 script {
                     // build image
@@ -33,8 +29,14 @@ pipeline {
                 }
             }
         }
+
+        stage ('Pre-analysis') {
+            steps {
+		        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
+            }
+        }
         
-        stage ('Build'){
+        stage ('Build engine'){
             steps {
                 dir('build')
                 {
