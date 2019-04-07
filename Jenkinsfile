@@ -30,7 +30,7 @@ pipeline {
             agent { docker { image 'thearusable/nocturne:latest' } }
             steps {
                 //  run cppcheck on codebase
-		        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
+		        sh 'cppcheck -v --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
             }
         }
         
