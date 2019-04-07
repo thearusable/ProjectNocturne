@@ -7,28 +7,28 @@ pipeline {
     }
 
     agent {
-        docker { image 'thearusable:nocturne' }
+        docker { image 'thearusable/nocturne:latest' }
     }
 
     stages {
 
-        stage ('Build image') {
-            steps{
-                script {
+        //stage ('Build image') {
+        //    steps{
+        //        script {
                     // build image
-                    image = docker.build registry
+        //            image = docker.build registry
 
                     // only push docker image when build from develop branch
-                    if (env.BRANCH_NAME == "develop"){
-                        docker.withRegistry('', registryCredential) {
-                            image.push("latest")
-                        }
-                    } else {
-                        sh 'echo "Not a develop branch - SKIPPING."'
-                    }
-                }
-            }
-        }
+        //            if (env.BRANCH_NAME == "develop"){
+        //                docker.withRegistry('', registryCredential) {
+        //                    image.push("latest")
+        //                }
+        //            } else {
+        //                sh 'echo "Not a develop branch - SKIPPING."'
+        //            }
+        //        }
+        //    }
+        //}
 
         stage ('Pre-analysis') {
             steps {
