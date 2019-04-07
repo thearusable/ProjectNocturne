@@ -32,12 +32,12 @@ pipeline {
             }
         }
 
-        stage ('Pre-analysis') {
-            agent { docker { image 'thearusable/nocturne:latest' } }
-            steps {
-		        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
-            }
-        }
+        //stage ('Pre-analysis') {
+        //    agent { docker { image 'thearusable/nocturne:latest' } }
+        //    steps {
+		//        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
+        //    }
+        //}
         
         stage ('Build engine'){
             agent { docker { image 'thearusable/nocturne:latest' } }
