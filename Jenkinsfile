@@ -9,7 +9,8 @@ pipeline {
     //    docker { image 'thearusable/nocturne:latest' }
     //}
 
-    agent none
+    //agent none
+    agent { docker { image 'thearusable/nocturne:latest' } }
 
     //agent {
     //    dockerfile {
@@ -20,38 +21,19 @@ pipeline {
 
     stages {
 
-        stage('Build image'){
-            agent any
+        stage('Docker'){
+            agent none
             steps{
                 script{
+                    // build docker image from dockerfile
                     sh 'docker build -t ${registry} .'
-                }
-            }
-        }
-
-        //stage('Publish image'){
-        //    agent any
-        //    steps{
-        //        script{
-        //            sh 'docker push thearusable/nocturne:latest'
-        //        }
-        //    }
-        //}
-
-        stage('Docker Push') {
-            agent any
-            steps {
-                script{
+                    // publish image on docker hub
                     docker.withRegistry( '', registryCredential ) {
                         sh 'docker push ${registry}:latest'
                     }
                 }
-                //withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-                //    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-                //    sh 'docker push thearusable/nocturne:latest'
-                //}
             }
-    }
+        }
 
         //stage ('Build image') {
         //    steps{
@@ -78,7 +60,7 @@ pipeline {
         //}
         
         stage ('Build engine'){
-            agent { docker { image 'thearusable/nocturne:latest' } }
+            
             steps {
                 dir('build')
                 {
