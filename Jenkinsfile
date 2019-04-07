@@ -6,8 +6,14 @@ pipeline {
         image = ''
     }
 
+    //agent {
+    //    docker { image 'thearusable/nocturne:latest' }
+    //}
+
     agent {
-        docker { image 'thearusable/nocturne:latest' }
+        dockerfile {
+            filename 'Dockerfile'
+        }
     }
 
     stages {
@@ -36,15 +42,15 @@ pipeline {
         //    }
         //}
         
-        stage ('Build engine'){
-            steps {
-                dir('build')
-                {
-                    sh 'cmake ..'
-                    sh 'make'
-                }
-            }
-        }
+        //stage ('Build engine'){
+        //    steps {
+        //        dir('build')
+        //        {
+        //            sh 'cmake ..'
+        //            sh 'make'
+        //        }
+        //    }
+        //}
     }
     //post {
 	//    always {
