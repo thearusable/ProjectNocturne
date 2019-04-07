@@ -42,15 +42,15 @@ pipeline {
         //    }
         //}
         
-        //stage ('Build engine'){
-        //    steps {
-        //        dir('build')
-        //        {
-        //            sh 'cmake ..'
-        //            sh 'make'
-        //        }
-        //    }
-        //}
+        stage ('Build engine'){
+            steps {
+                dir('build')
+                {
+                    sh 'cmake ..'
+                    sh 'make'
+                }
+            }
+        }
     }
     //post {
 	//    always {
