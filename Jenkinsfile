@@ -9,7 +9,6 @@ pipeline {
     agent none
 
     stages {
-
         stage('Docker'){
             agent any
             steps{
@@ -17,24 +16,20 @@ pipeline {
                     // build docker image from dockerfile
                     sh 'docker build -t ${registry} .'
                     // publish image on docker hub
-                    docker.withRegistry( '', registryCredential ) {
-                        sh 'docker push ${registry}:latest'
+                    if (env.BRANCH_NAME == "develop"){
+                        docker.withRegistry( '', registryCredential ) {
+                            sh 'docker push ${registry}:latest'
+                        }
+                    } else {
+                        sh 'echo "Not a develop branch - SKIPPING."'
                     }
-                    // only push docker image when build from develop branch
-        //            if (env.BRANCH_NAME == "develop"){
-        //                docker.withRegistry('', registryCredential) {
-        //                    image.push("latest")
-        //                }
-        //            } else {
-        //                sh 'echo "Not a develop branch - SKIPPING."'
-        //            }
                 }
             }
         }
-
-        //stage ('Pre-analysis') {
+        //stage ('Static analysis') {
         //    agent { docker { image 'thearusable/nocturne:latest' } }
         //    steps {
+                //  run cppcheck on codebase
 		//        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
         //    }
         //}
@@ -46,13 +41,14 @@ pipeline {
                 {
                     sh 'cmake ..'
                     sh 'make'
+                    sh 'make -s list'
                 }
             }
         }
     }
-    post {
-	    always {
-	        publishCppcheck pattern:'cppcheck_report.xml'
-	    }           
-    }
+    //post {
+	//    always {
+	//        publishCppcheck pattern:'cppcheck_report.xml'
+	//    }           
+    //}
 }
