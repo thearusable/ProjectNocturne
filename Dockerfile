@@ -3,10 +3,6 @@ FROM ubuntu:18.04
 
 MAINTAINER Arkadiusz Szczepkowicz <arek.szczepkowicz@gmail.com>
 
-# Config
-ARG SDL2_VERSION=2.0.0
-ARG CMAKE_VERSION=3.14.1
-
 # Update apps on the base image
 RUN apt-get -y update \
     && apt-get upgrade -y \
@@ -26,6 +22,10 @@ RUN apt-get install freeglut3 freeglut3-dev libglew1.5 libglew1.5-dev libglu1-me
 # Build curl with https
 RUN git clone https://github.com/bagder/curl.git && cd curl && ./buildconf && ./configure --with-ssl && make && make install \
     && cd .. && rm -rf curl
+
+# Config for SDL2 and CMake
+ARG SDL2_VERSION=2.0.0
+ARG CMAKE_VERSION=3.14.1
 
 # Build SDL2
 RUN wget https://www.libsdl.org/release/SDL2-${SDL2_VERSION}.tar.gz \
