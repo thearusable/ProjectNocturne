@@ -54,7 +54,7 @@ pipeline {
             steps {
                 dir('build')
                 {
-                    //sh 'cmake ..'
+                    sh 'cmake ..'
                     //sh 'make all'
                     sh 'make test'
                 }
