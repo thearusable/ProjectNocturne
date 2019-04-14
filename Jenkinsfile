@@ -56,6 +56,17 @@ pipeline {
                 }
             } 
         }
+
+        stage ('Documentation'){
+            agent { docker { image 'thearusable/nocturne:latest' } }
+            steps {
+                dir('build')
+                {
+                    sh 'cmake ..'
+                    sh 'make doc'
+                }
+            } 
+        }
     }
     post {
         unsuccessful {
