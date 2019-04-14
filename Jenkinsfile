@@ -13,7 +13,6 @@ pipeline {
             agent any
             steps{
                 script{
-                    sh 'printenv'
                     // build docker image from dockerfile
                     sh 'docker build -t ${registry} .'
                     // publish image on docker hub
@@ -60,6 +59,7 @@ pipeline {
     }
     post {
         always {
+            sh 'printenv'
             emailext body: "${DEFAULT_CONTENT}",
                 recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
                 subject: "${DEFAULT_SUBJECT}"
