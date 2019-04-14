@@ -13,6 +13,7 @@ pipeline {
             agent any
             steps{
                 script{
+                    sh 'printenv'
                     // build docker image from dockerfile
                     sh 'docker build -t ${registry} .'
                     // publish image on docker hub
@@ -53,15 +54,13 @@ pipeline {
                 {
                     sh 'cmake ..'
                     sh 'make test'
-                    sh 'printenv'
                 }
             } 
         }
     }
-    //post {
-    //failure {
-    //    mail to: 'team@example.com',
-    //         subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-    //         body: "Something is wrong with ${env.BUILD_URL}"
-    //}
+    post {
+        always {
+            emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
+        }
+    }
 }
