@@ -27,7 +27,7 @@ pipeline {
             }
         }
         stage ('Static analysis') {
-            agent { docker { image 'thearusable/nocturne:latest' } }
+            agent any //{ docker { image 'thearusable/nocturne:latest' } }
             steps {
 		        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
 		        //sh 'clang-tidy .'
@@ -47,9 +47,7 @@ pipeline {
         }
     }
     post {
-        agent any
 	    always {
-            sh 'docker cp ${registry}:cppcheck_report.xml .'
 	        publishCppcheck pattern:'cppcheck_report.xml'
 	    }           
     }
