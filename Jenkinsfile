@@ -9,6 +9,7 @@ pipeline {
     agent none
 
     stages {
+        //@TODO - Prepare dockerfiles for other operating systems (Windows, Mac)
         stage('Docker'){
             agent any
             steps{
@@ -32,6 +33,7 @@ pipeline {
                 //cppcheck
 		        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
                 publishCppcheck pattern:'cppcheck_report.xml'
+                //@TODO - add other tools
             }
         }
         
@@ -53,6 +55,7 @@ pipeline {
                 {
                     sh 'cmake ..'
                     sh 'make test'
+                    //@TODO - Generate coverage raport
                 }
             } 
         }
@@ -64,7 +67,7 @@ pipeline {
                 {
                     sh 'cmake ..'
                     sh 'make doc'
-                    sh 'git status'
+                    //@TODO - Publish doc files to GitHub
                 }
             } 
         }

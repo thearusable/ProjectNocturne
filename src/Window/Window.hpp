@@ -14,14 +14,6 @@ public:
 	Window(uint32_t width, uint32_t height, const std::string& title);
 	~Window();
 
-	/** A test class. Detailed description of the test class
-	 *  Usage:
-	 *  @code
-	 *    test a;
-	 *  @endcode
-	 *  @example testexample.cpp
-	 *  An example of the test class.
-	 */
 	void
 	RegisterMouseListener(IMouseListener* listener);
 
