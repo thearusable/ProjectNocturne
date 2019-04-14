@@ -64,6 +64,7 @@ pipeline {
                 {
                     sh 'cmake ..'
                     sh 'make doc'
+                    sh 'git status'
                 }
             } 
         }
