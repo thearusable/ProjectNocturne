@@ -29,9 +29,11 @@ pipeline {
         stage ('Static analysis') {
             agent any //{ docker { image 'thearusable/nocturne:latest' } }
             steps {
+                //cppcheck
 		        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
                 publishCppcheck pattern:'cppcheck_report.xml'
-		        //sh 'clang-tidy .'
+		        
+                //sh 'clang-tidy .'
             }
         }
         
@@ -42,9 +44,21 @@ pipeline {
                 {
                     sh 'cmake ..'
                     sh 'make all'
-                    sh 'make test'
+                    //sh 'make test'
                 }
             }
+        }
+
+        stage ('Testing'){
+            agent { docker { image 'thearusable/nocturne:latest' } }
+            steps {
+                dir('build')
+                {
+                    //sh 'cmake ..'
+                    //sh 'make all'
+                    sh 'make test'
+                }
+            } 
         }
     }
     //post {
