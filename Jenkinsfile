@@ -46,10 +46,10 @@ pipeline {
             }
         }
     }
-    post {
-	    always {
-            sh 'docker cp ${registry}:cppcheck_report.xml .'
-	        publishCppcheck pattern:'cppcheck_report.xml'
-	    }           
-    }
+    //post {
+	//    always {
+    //        sh 'docker cp ${registry}:cppcheck_report.xml .'
+	//        publishCppcheck pattern:'cppcheck_report.xml'
+	//    }           
+    //}
 }
