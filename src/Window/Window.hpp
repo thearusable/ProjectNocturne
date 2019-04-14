@@ -14,6 +14,9 @@ public:
 	Window(uint32_t width, uint32_t height, const std::string& title);
 	~Window();
 
+	/// @brief xDDD
+	/// @param test
+	/// @return
 	void
 	RegisterMouseListener(IMouseListener* listener);
 
