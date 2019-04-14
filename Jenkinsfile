@@ -27,13 +27,11 @@ pipeline {
             }
         }
         stage ('Static analysis') {
-            agent any //{ docker { image 'thearusable/nocturne:latest' } }
+            agent any
             steps {
                 //cppcheck
 		        sh 'cppcheck --enable=all --inconclusive --verbose --xml --xml-version=2 . 2> cppcheck_report.xml'
                 publishCppcheck pattern:'cppcheck_report.xml'
-		        
-                //sh 'clang-tidy .'
             }
         }
         
@@ -44,7 +42,6 @@ pipeline {
                 {
                     sh 'cmake ..'
                     sh 'make all'
-                    //sh 'make test'
                 }
             }
         }
@@ -55,15 +52,16 @@ pipeline {
                 dir('build')
                 {
                     sh 'cmake ..'
-                    //sh 'make all'
                     sh 'make test'
+                    sh 'printenv'
                 }
             } 
         }
     }
     //post {
-	//    always {
-	//        
-	//    }           
+    //failure {
+    //    mail to: 'team@example.com',
+    //         subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+    //         body: "Something is wrong with ${env.BUILD_URL}"
     //}
 }
