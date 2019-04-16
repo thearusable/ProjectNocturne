@@ -1,10 +1,12 @@
-# STAGE 1 - get ubuntu
+# Get ubuntu
 FROM ubuntu:18.04
+
+MAINTAINER Arkadiusz Szczepkowicz <arek.szczepkowicz@gmail.com>
 
 # Update apps on the base image
 RUN apt-get -y update \
     && apt-get upgrade -y \
-    && apt-get install wget git cppcheck curl autoconf libtool m4 automake -y \
+    && apt-get install wget git curl autoconf libtool m4 automake libssl-dev zlib1g-dev doxygen -y \
     && apt-get autoremove -y
 
 # Install gcc
@@ -14,20 +16,27 @@ RUN apt-get install build-essential gcc-8 g++-8 -y \
     && apt-get autoremove -y
 
 # Install opengl
-RUN apt-get install freeglut3 freeglut3-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx \
-    libgl1-mesa-dev -y && apt-get autoremove -y
+RUN apt-get install freeglut3 freeglut3-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev -y \
+    && apt-get autoremove -y
 
-# Install SDL2
-RUN apt-get install libsdl2-dev -y && apt-get autoremove -y
+# Build curl with https
+RUN git clone https://github.com/bagder/curl.git && cd curl && ./buildconf && ./configure --with-ssl && make && make install \
+    && cd .. && rm -rf curl
 
-# Install openssl which is requirement for curl --with-ssl
-RUN apt-get install libssl-dev -y && apt-get autoremove -y
+# Config for SDL2 and CMake
+ARG SDL2_VERSION=2.0.9
+ARG CMAKE_VERSION=3.14.1
 
-# Install curl with https
-RUN git clone https://github.com/bagder/curl.git && cd curl && ./buildconf && ./configure --with-ssl && make && make install
+# Build SDL2
+RUN wget https://www.libsdl.org/release/SDL2-${SDL2_VERSION}.tar.gz \
+    && tar -xzf SDL2-${SDL2_VERSION}.tar.gz \
+    && cd SDL2-${SDL2_VERSION} \
+    && ./configure && make all && make install \
+    && cd .. && rm -rf SDL2-${SDL2_VERSION} && rm SDL2-${SDL2_VERSION}.tar.gz
 
-# Build latest cmake
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0.tar.gz \
-    && tar -xzf cmake-3.14.0.tar.gz \
-    && cd cmake-3.14.0 \
-    && ./bootstrap --system-curl && make && make install && cd .. && rm -rf cmake-3.14.0
+# Build cmake
+RUN wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz \
+    && tar -xzf cmake-${CMAKE_VERSION}.tar.gz \
+    && cd cmake-${CMAKE_VERSION} \
+    && ./bootstrap --system-curl && make && make install \
+    && cd .. && rm -rf cmake-${CMAKE_VERSION} && rm cmake-${CMAKE_VERSION}.tar.gz

@@ -1,10 +1,10 @@
 #pragma once
 
+#include <IKeyboardListener.hpp>
+#include <IMouseListener.hpp>
 #include <memory>
 #include <string>
 #include <vector>
-#include <IMouseListener.hpp>
-#include <IKeyboardListener.hpp>
 
 namespace noc::window
 {
@@ -31,7 +31,7 @@ public:
 
 	void
 	SetIcon(const std::string& file);
-	
+
 	void
 	HandleInput();
 
@@ -43,10 +43,10 @@ public:
 
 	void
 	WrapMouse(bool choice);
-	
+
 	void
 	ShowCursor(bool choice);
-	
+
 private:
 	uint32_t    m_width;
 	uint32_t    m_height;
@@ -54,7 +54,7 @@ private:
 	std::string m_title;
 
 	std::vector<IKeyboardListener*> m_keyboardListeners;
-	std::vector<IMouseListener*> m_mouseListeners;
+	std::vector<IMouseListener*>    m_mouseListeners;
 
 	void
 	NotifyMouseListeners(const SDL_Event& event);
@@ -64,4 +64,3 @@ private:
 };
 
 }   // namespace noc::window
-
