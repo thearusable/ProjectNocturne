@@ -5,6 +5,7 @@
 #include <optional>
 #include <vector>
 #include "KeyCodes.hpp"
+#include <glm.hpp>
 
 namespace noc::input
 {
@@ -20,6 +21,8 @@ class Input
 // TODO: CHANGE TO VEC2
 	uint32_t m_mouseX;
 	uint32_t m_mouseY;
+
+	glm::vec2 m_mousePos;
 
 public:
 	// @brief Used by UserControllable object to register for certain action

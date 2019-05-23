@@ -24,4 +24,5 @@ endfunction()
 
 add_subdirectory(SDL2)
 add_subdirectory(OpenGL)
+add_subdirectory(GLM)
 

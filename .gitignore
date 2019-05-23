@@ -351,3 +351,4 @@ build/*
 SDL2-*
 glew-*
 *.zip
+glm-*
